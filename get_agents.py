@@ -17,11 +17,11 @@ async def main():
         "NS": 'naptha',
     })
 
-    modules = await hub.select("module")
-    if modules:
-        print(modules)
+    agents = await hub.select("agent")
+    if agents:
+        print(agents)
     else:
-        print("modules not found")
+        print("agents not found")
 
 if __name__ == "__main__":
     asyncio.run(main())
