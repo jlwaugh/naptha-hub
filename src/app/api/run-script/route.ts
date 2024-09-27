@@ -16,12 +16,12 @@ export async function GET(request: Request) {
   const scriptPath = path.join(process.cwd(), script);
 
   try {
-    console.log(`Attempting to execute: python ${scriptPath}`);
+    console.log(`Running: ${scriptPath}`);
     const { stdout, stderr } = await execPromise(`python ${scriptPath}`, {
       env: {
         ...process.env,
-        SURREALDB_USER: process.env.SURREALDB_USER || 'root',
-        SURREALDB_PASS: process.env.SURREALDB_PASS || 'root',
+        HUB_USER: process.env.HUB_USER,
+        HUB_PASS: process.env.HUB_PASS,
       }
     });
 
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: stderr }, { status: 500 });
     }
 
-    console.log(`Script output: ${stdout}`);
+    console.log(`Output: ${stdout}`);
     return NextResponse.json({ result: stdout });
   } catch (error: unknown) {
     console.error(`Failed to execute script:`, error);

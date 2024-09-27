@@ -1,37 +1,34 @@
-import Scripts from "./components/Scripts";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
+import Agents from './components/Agents';
+import Nodes from './components/Nodes';
+import Home from './components/Home';
+
+export default function Main() {
+  const [activeComponent, setActiveComponent] = useState<'agents' | 'nodes' | null>(null);
+  const [scriptToRun, setScriptToRun] = useState<string | null>(null);
+
+  const handleSidebarClick = (component: 'agents' | 'nodes') => {
+    setActiveComponent(component);
+    setScriptToRun(component === 'agents' ? 'get_agents.py' : 'get_nodes.py');
+  };
+
+  const renderDefaultView = () => <Home />;
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Scripts />
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://docs.naptha.ai"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://github.com/NapthaAI"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Build
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://x.com/NapthaAI"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Connect
-        </a>
-      </footer>
+    <div className="flex flex-col h-screen">
+      <Navbar />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar onItemClick={handleSidebarClick} />
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#FAFAFB]">
+          {activeComponent === 'agents' && <Agents scriptToRun={scriptToRun} />}
+          {activeComponent === 'nodes' && <Nodes scriptToRun={scriptToRun} />}
+          {activeComponent === null && renderDefaultView()}
+        </main>
+      </div>
     </div>
   );
 }
